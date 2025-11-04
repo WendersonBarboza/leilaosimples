@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.pyc
+
+# App data (não versionar dados locais)
+auctions_data.json
+
+# Ambientes
+.env

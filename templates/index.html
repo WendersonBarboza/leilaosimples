@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Itens em Leilão</strong>
+        <a href="{{ url_for('new_item') }}" class="btn btn-sm btn-primary">Novo Item</a>
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for item in items %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <a href="{{ url_for('item_detail', item_id=item.id) }}" class="fw-semibold">{{ item.title }}</a>
+              <div class="small text-muted">Termina em: {{ item.end_time.strftime('%d/%m/%Y %H:%M') }} UTC</div>
+            </div>
+            <div class="text-end">
+              <div class="fw-bold">R$ {{ '%.2f'|format(item.current_price) }}</div>
+              {% if item.is_closed %}
+                <span class="badge bg-secondary">Encerrado</span>
+              {% else %}
+                <span class="badge bg-success">Aberto</span>
+              {% endif %}
+            </div>
+          </li>
+        {% else %}
+          <li class="list-group-item text-center text-muted">Nenhum item cadastrado.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-header"><strong>Ofertas Recentes</strong></div>
+      <ul class="list-group list-group-flush">
+        {% for bid in recent_bids %}
+          <li class="list-group-item d-flex justify-content-between">
+            <div class="me-2">
+              <div class="small">{{ bid.user.name }} em <a href="{{ url_for('item_detail', item_id=bid.item.id) }}">{{ bid.item.title }}</a></div>
+              <div class="text-muted small">{{ bid.created_at.strftime('%d/%m/%Y %H:%M:%S') }} UTC</div>
+            </div>
+            <div class="fw-semibold">R$ {{ '%.2f'|format(bid.amount) }}</div>
+          </li>
+        {% else %}
+          <li class="list-group-item text-center text-muted">Sem ofertas ainda.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
